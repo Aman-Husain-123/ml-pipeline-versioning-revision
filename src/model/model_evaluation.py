@@ -56,9 +56,26 @@ def evaluate_model(clf, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         y_pred_proba = clf.predict_proba(X_test)[:, 1]
 
         accuracy = accuracy_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred)
-        recall = recall_score(y_test, y_pred)
-        auc = roc_auc_score(y_test, y_pred_proba)
+
+        precision = precision_score(
+            y_test,
+            y_pred,
+            pos_label='happiness'
+        )
+
+        recall = recall_score(
+            y_test,
+            y_pred,
+            pos_label='happiness'
+        )
+
+        # Convert string labels to numeric for AUC
+        y_test_numeric = pd.Series(y_test).map({
+            'sadness': 0,
+            'happiness': 1
+        })
+
+        auc = roc_auc_score(y_test_numeric, y_pred_proba)
 
         metrics_dict = {
             'accuracy': accuracy,
@@ -66,8 +83,10 @@ def evaluate_model(clf, X_test: np.ndarray, y_test: np.ndarray) -> dict:
             'recall': recall,
             'auc': auc
         }
+
         logger.debug('Model evaluation metrics calculated')
         return metrics_dict
+
     except Exception as e:
         logger.error('Error during model evaluation: %s', e)
         raise
