@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 emotion-detection
 ==============================
 
@@ -55,3 +56,6 @@ Project Organization
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+=======
+# ml-pipeline-versioning-revision
+>>>>>>> 70512b654c0fd13cc20bf9c05cd7db83aa1dd93c
