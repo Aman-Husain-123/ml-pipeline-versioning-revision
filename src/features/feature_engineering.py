@@ -1,19 +1,19 @@
 import numpy as np
 import pandas as pd
 import os
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 import yaml
 import logging
 
 # logging configuration
 logger = logging.getLogger('feature_engineering')
-logger.setLevel('DEBUG')
+logger.setLevel(logging.DEBUG)
 
 console_handler = logging.StreamHandler()
-console_handler.setLevel('DEBUG')
+console_handler.setLevel(logging.DEBUG)
 
 file_handler = logging.FileHandler('feature_engineering_errors.log')
-file_handler.setLevel('ERROR')
+file_handler.setLevel(logging.ERROR)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
@@ -56,7 +56,11 @@ def load_data(file_path: str) -> pd.DataFrame:
 def apply_BOW(train_data: pd.DataFrame, test_data: pd.DataFrame, max_features: int) -> tuple:
     """Apply BOW to the data."""
     try:
-        vectorizer = CountVectorizer(max_features=max_features)
+        # Fill NaN values before vectorization
+        train_data['content'] = train_data['content'].fillna('')
+        test_data['content'] = test_data['content'].fillna('')
+        
+        vectorizer = TfidfVectorizer(max_features=max_features)
 
         X_train = train_data['content'].values
         y_train = train_data['sentiment'].values
@@ -93,13 +97,13 @@ def main():
         params = load_params('params.yaml')
         max_features = params['feature_engineering']['max_features']
 
-        train_data = load_data('./data/interim/train_processed.csv')
-        test_data = load_data('./data/interim/test_processed.csv')
+        train_df = load_data('./data/interim/train_processed.csv')
+        test_df = load_data('./data/interim/test_processed.csv')
 
-        train_df, test_df = apply_BOW(train_data, test_data, max_features)
+        train_df, test_df = apply_BOW(train_df, test_df, max_features)
 
-        save_data(train_df, os.path.join("./data", "processed", "train_BOW.csv"))
-        save_data(test_df, os.path.join("./data", "processed", "test_BOW.csv"))
+        save_data(train_df, os.path.join("./data", "processed", "train_tfidf.csv"))
+        save_data(test_df, os.path.join("./data", "processed", "test_tfidf.csv"))
     except Exception as e:
         logger.error('Failed to complete the feature engineering process: %s', e)
         print(f"Error: {e}")
