@@ -60,23 +60,23 @@ stages:
       size: 3756
     params:
       params.yaml:
-        feature_engineering.max_features: 100
+        feature_engineering.max_features: 50
     outs:
     - path: data/processed/test_BOW.csv
       hash: md5
-      md5: bedab05605c61c1d58dc11b2b9dcbf87
-      size: 436002
+      md5: 6ab0bce01908809d94a99f14e0000234
+      size: 228352
     - path: data/processed/train_BOW.csv
       hash: md5
-      md5: 010b3ae7f7131167fcb50af8018d494e
-      size: 1743176
+      md5: d0b261eaad9f92e6b1f7a1d4088cf566
+      size: 913126
   model_building:
     cmd: python src/model/model_building.py
     deps:
     - path: data/processed/train_BOW.csv
       hash: md5
-      md5: 010b3ae7f7131167fcb50af8018d494e
-      size: 1743176
+      md5: d0b261eaad9f92e6b1f7a1d4088cf566
+      size: 913126
     - path: src/model/model_building.py
       hash: md5
       md5: 693bea8c76d5686eea67df39f8c3cf25
@@ -88,19 +88,19 @@ stages:
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: 4f0525e0daa932690a05273b55305f47
-      size: 39832
+      md5: 87d09055b13b160215066c0b2c8e20be
+      size: 39977
   model_evaluation:
     cmd: python src/model/model_evaluation.py
     deps:
     - path: data/processed/test_BOW.csv
       hash: md5
-      md5: bedab05605c61c1d58dc11b2b9dcbf87
-      size: 436002
+      md5: 6ab0bce01908809d94a99f14e0000234
+      size: 228352
     - path: models/model.pkl
       hash: md5
-      md5: 4f0525e0daa932690a05273b55305f47
-      size: 39832
+      md5: 87d09055b13b160215066c0b2c8e20be
+      size: 39977
     - path: src/model/model_evaluation.py
       hash: md5
       md5: fff1947f83b125c7acc50c2bfed71d4e
@@ -108,5 +108,5 @@ stages:
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: f8d7d75e61aa8ed38ad61da7cb3e651a
-      size: 144
+      md5: db1f5f4e83b0e5d7727af665db0d9c8d
+      size: 146
